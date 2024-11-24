@@ -1,0 +1,88 @@
+version: '3.8'
+
+services:
+  user_service:
+    build:
+      context: ./user_service
+    container_name: user_service
+    ports:
+      - "8001:8000"
+    environment:
+      - DATABASE_NAME=user_service
+      - DATABASE_USER=postgres
+      - DATABASE_PASSWORD=2321517
+      - DATABASE_HOST=postgres_db  # Use service name of PostgreSQL
+      - DATABASE_PORT=5432
+    depends_on:
+      - postgres_db
+    networks:
+      - app-network
+
+  itinerary_service:
+    build:
+      context: ./itinerary_service
+    container_name: itinerary_service
+    ports:
+      - "8002:8000"
+    environment:
+      - DATABASE_NAME=itinerary_service
+      - DATABASE_USER=postgres
+      - DATABASE_PASSWORD=2321517
+      - DATABASE_HOST=postgres_db  # Use service name of PostgreSQL
+      - DATABASE_PORT=5432
+    depends_on:
+      - postgres_db
+    networks:
+      - app-network
+
+  flight_service:
+    build:
+      context: ./flight_service
+    container_name: flight_service
+    ports:
+      - "8003:8000"
+    environment:
+      - DATABASE_NAME=flight_service
+      - DATABASE_USER=postgres
+      - DATABASE_PASSWORD=2321517
+      - DATABASE_HOST=postgres_db  # Use service name of PostgreSQL
+      - DATABASE_PORT=5432
+    depends_on:
+      - postgres_db
+    networks:
+      - app-network
+
+  hotel_service:
+    build:
+      context: ./hotel_service
+    container_name: hotel_service
+    ports:
+      - "8004:8000"
+    environment:
+      - DATABASE_NAME=hotel_service
+      - DATABASE_USER=postgres
+      - DATABASE_PASSWORD=2321517
+      - DATABASE_HOST=postgres_db  # Use service name of PostgreSQL
+      - DATABASE_PORT=5432
+    depends_on:
+      - postgres_db
+    networks:
+      - app-network
+
+  postgres_db:
+    image: postgres:latest
+    container_name: postgres_db
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 2321517
+    ports:
+      - "5432:5432"
+    networks:
+      - app-network
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
+networks:
+  app-network:
+    driver: bridge
